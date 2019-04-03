@@ -13,6 +13,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(columnDefinition = "text")
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

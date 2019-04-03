@@ -1,7 +1,5 @@
 package com.work.request.model;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -19,11 +17,14 @@ public class Request {
     @NotBlank
     private String description;
 
-    @Column(columnDefinition = "status")
-    @ColumnDefault("Новая")
+    @Column(nullable = false, columnDefinition = "text")
     private String status;
 
     public Request() {
+    }
+
+    public Request(Long id) {
+        this.id = id;
     }
 
     public Request(Long id, String description) {

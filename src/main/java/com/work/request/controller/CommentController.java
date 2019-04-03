@@ -21,8 +21,15 @@ public class CommentController {
     private RequestRepository requestRepository;
 
     @GetMapping("/requests/{requestId}/comments")
-    public List<Comment> getAnswersByQuestionId(@PathVariable Long requestId) {
+    public List<Comment> getCommentsByQuestionId(@PathVariable Long requestId) {
         return commentRepository.findByRequestId(requestId);
+    }
+    @GetMapping("/requests/{requestId}/comments/{commentId}")
+    public Comment getCommentByQuestionId(@PathVariable Long requestId, @PathVariable Long commentId) {
+        requestRepository.findById(requestId)
+                .orElseThrow(() -> new RequestNotFoundException(requestId));
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
     }
 
     @PostMapping("/requests/{requestId}/comments")

@@ -1,6 +1,8 @@
 package com.work.request.controller;
 
+import com.work.request.enums.StatusEnum;
 import com.work.request.exception.RequestNotFoundException;
+import com.work.request.exception.StatusNotFoundException;
 import com.work.request.model.Request;
 import com.work.request.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,6 @@ public class RequestController {
     @Autowired
     private RequestRepository requestRepository;
 
-//    RequestController(RequestRepository requestRepository) {
-//        this.requestRepository = requestRepository;
-//    }
-
     @GetMapping("/requests")
     public List<Request> getRequests() {
         return requestRepository.findAll();
@@ -32,19 +30,34 @@ public class RequestController {
 
     @PostMapping("/requests")
     public Request createRequest(@Valid @RequestBody Request request) {
+        request.setStatus(StatusEnum.NEW.getStatus());
         return requestRepository.save(request);
     }
 
-    @PutMapping("/requests/{id}")
+    @PutMapping("/requests/{id}/description")
     public Request updateRequest(@PathVariable(value = "id") Long requestId,
-                           @Valid @RequestBody Request requestUpdate) {
+                                 @Valid @RequestBody Request requestUpdate) {
+
 
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RequestNotFoundException(requestId));
 
         request.setDescription(requestUpdate.getDescription());
-        request.setStatus(requestUpdate.getStatus());
+        return requestRepository.save(request);
+    }
 
+    @PutMapping("/requests/{id}/status")
+    public Request updateStatus(@PathVariable(value = "id") Long requestId,
+                                @RequestBody Request requestUpdate) {
+
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RequestNotFoundException(requestId));
+
+        StatusEnum.stream()
+                .filter(s -> s.getStatus().equals(requestUpdate.getStatus()))
+                .findAny()
+                .ifPresentOrElse(x -> request.setStatus(x.getStatus()),
+                                () -> { throw new StatusNotFoundException(); });
         return requestRepository.save(request);
     }
 
