@@ -53,12 +53,11 @@ public class RequestController {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RequestNotFoundException(requestId));
 
-        StatusEnum.stream()
+        return StatusEnum.stream()
                 .filter(s -> s.getStatus().equals(requestUpdate.getStatus()))
-                .findAny()
-                .ifPresentOrElse(x -> request.setStatus(x.getStatus()),
-                                () -> { throw new StatusNotFoundException(); });
-        return requestRepository.save(request);
+                .findFirst()
+                .map( upd -> { request.setStatus(upd.getStatus()); return requestRepository.save(request); })
+                .orElseThrow(() -> new StatusNotFoundException());
     }
 
     @DeleteMapping("/requests/{id}")
