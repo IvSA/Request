@@ -4,18 +4,24 @@ services:
 
   db:
     build: './database'
+    container_name: request_db
     restart: always
+#    volumes:
+#      - request_db:/var/lib/postgresql/data
     environment:
-        - "POSTGRES_DB_USER=ivsa"
-        - "POSTGRES_DB_PASSWORD=ivsa01"
-        - "POSTGRES_DB_DATABASE=db_emp"
-        - "POSTGRES_PASSWORD=password"
+        - POSTGRES_DB_USER=ivsa
+        - POSTGRES_DB_PASSWORD=ivsa01
+        - POSTGRES_DB_DATABASE=db_emp
+        - POSTGRES_PASSWORD=password
+        - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
         - 5432:5432
+#volumes:
+#  request_db:
 
-#  app:
-#    build: .
-#    ports:
-#      - "8080:8080"
-##    depends_on:
-##      - db
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
