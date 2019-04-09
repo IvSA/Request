@@ -52,8 +52,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
 			<plugin>
@@ -62,9 +62,7 @@
 				<version>1.2.0</version>
 				<configuration>
 					<imageName>request</imageName>
-					<baseImage>java</baseImage>
-					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-					<!-- copy the service's jar file from target into the root directory of the image -->
+					<dockerDirectory>docker</dockerDirectory>
 					<resources>
 						<resource>
 							<targetPath>/</targetPath>

@@ -1,16 +1,21 @@
-version: '3.1'
+version: '3.7'
 
 services:
 
   db:
-    image: postgres
+    build: './database'
     restart: always
     environment:
-      POSTGRES_PASSWORD: 25368
-
-  app:
-    image: request
+        - "POSTGRES_DB_USER=ivsa"
+        - "POSTGRES_DB_PASSWORD=ivsa01"
+        - "POSTGRES_DB_DATABASE=db_emp"
+        - "POSTGRES_PASSWORD=password"
     ports:
-      - "8080:8080"
-#    depends_on:
-#      - db
+        - 5432:5432
+
+#  app:
+#    build: .
+#    ports:
+#      - "8080:8080"
+##    depends_on:
+##      - db
