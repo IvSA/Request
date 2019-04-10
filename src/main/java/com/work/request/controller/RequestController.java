@@ -38,25 +38,25 @@ public class RequestController {
 
     @PutMapping("/requests/{id}/description")
     public Request updateRequest(@PathVariable(value = "id") Long requestId,
-                                 @Valid @RequestBody Request requestUpdate) {
+                                 @RequestBody String description) {
 
 
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RequestNotFoundException(requestId));
 
-        request.setDescription(requestUpdate.getDescription());
+        request.setDescription(description);
         return requestRepository.save(request);
     }
 
     @PutMapping("/requests/{id}/status")
     public Request updateStatus(@PathVariable(value = "id") Long requestId,
-                                @RequestBody Request requestUpdate) {
+                                @RequestBody String status) {
 
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RequestNotFoundException(requestId));
 
         return StatusEnum.stream()
-                .filter(s -> s.getStatus().equals(requestUpdate.getStatus()))
+                .filter(s -> s.getStatus().equals(status))
                 .findFirst()
                 .map( upd -> { request.setStatus(upd.getStatus()); return requestRepository.save(request); })
                 .orElseThrow(() -> new StatusNotFoundException());

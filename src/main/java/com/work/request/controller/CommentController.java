@@ -34,25 +34,24 @@ public class CommentController {
 
     @PostMapping("/requests/{requestId}/comments")
     public Comment addComment(@PathVariable Long requestId,
-                              @Valid @RequestBody Comment comment) {
+                              @RequestBody  String comment) {
         return requestRepository.findById(requestId)
-                .map(request -> {
-                    comment.setRequest(request);
-                    return commentRepository.save(comment);
+                .map(request -> { Comment com = new Comment(requestId, comment, request);
+                    return commentRepository.save(com);
                 }).orElseThrow(() -> new RequestNotFoundException(requestId));
     }
 
     @PutMapping("/requests/{requestId}/comments/{commentId}")
     public Comment updateComment(@PathVariable Long requestId,
                                  @PathVariable Long commentId,
-                                 @Valid @RequestBody Comment commentRequest) {
+                                 @RequestBody  String commentUpd) {
         if(!requestRepository.existsById(requestId)) {
             throw new RequestNotFoundException(requestId);
         }
 
         return commentRepository.findById(commentId)
                 .map(comment -> {
-                    comment.setText(commentRequest.getText());
+                    comment.setText(commentUpd);
                     return commentRepository.save(comment);
                 }).orElseThrow(() -> new CommentNotFoundException(commentId));
     }
