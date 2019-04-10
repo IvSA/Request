@@ -1,5 +1,7 @@
 package com.work.request.model;
 
+import com.work.request.enums.StatusEnum;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -21,6 +23,11 @@ public class Request {
     private String status;
 
     public Request() {
+    }
+
+    public Request(@NotBlank String description) {
+        this.description = description;
+        this.status = StatusEnum.NEW.getStatus();
     }
 
     public Request(Long id) {

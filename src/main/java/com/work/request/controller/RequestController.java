@@ -6,6 +6,8 @@ import com.work.request.exception.StatusNotFoundException;
 import com.work.request.model.Request;
 import com.work.request.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +31,9 @@ public class RequestController {
     }
 
     @PostMapping("/requests")
-    public Request createRequest(@Valid @RequestBody Request request) {
-        request.setStatus(StatusEnum.NEW.getStatus());
-        return requestRepository.save(request);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Request createRequest(@RequestBody String description) {
+        return requestRepository.save(new Request(description));
     }
 
     @PutMapping("/requests/{id}/description")
